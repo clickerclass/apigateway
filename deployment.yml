@@ -19,6 +19,13 @@ spec:
           image: localhost:5000/clickerclass-apigateway
           ports:
             - containerPort: 8090
+          resources:
+            requests:
+              memory: "350Mi"
+              cpu: "150m"
+            limits:
+              memory: "700Mi"
+              cpu: "500m"
 ---
 apiVersion: v1
 kind: Service
@@ -30,3 +37,23 @@ spec:
   ports:
     - protocol: TCP
       port: 8090
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: resource-api-gateway
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api-gateway-deployment
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 50
