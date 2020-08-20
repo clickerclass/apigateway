@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: localhost:5000/clickerclass-apigateway
+          image: alejoab12/clickerclass-apigateway
           ports:
             - containerPort: 8090
           resources:
