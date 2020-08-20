@@ -1,6 +1,6 @@
 spring:
   application:
-    name: toures-balon-api-gateway
+    name: api-gateway
   profiles: prod
   cloud:
     config:
