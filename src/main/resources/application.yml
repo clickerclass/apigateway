@@ -1,0 +1,50 @@
+server:
+  port: 8090
+---
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+spring:
+  sleuth:
+    sampler:
+      probability: 1.0
+  zipkin:
+    base-url: http://localhost:9411/
+  profiles:
+    active:
+    - dev
+  application:
+    name: toures-balon-api-gateway
+  cloud:
+    gateway:
+      routes:
+      - id: toures-balon-usuario-routes
+        uri: lb://TOURES-BALON-USUARIO
+        predicates:
+        - Path=/usuario/**
+      - id: toures-balon-oauth
+        uri: lb://TOURES-BALON-OAUTH
+        predicates:
+        - Path=/oauth/**
+oauth:
+  enabled: true
+  jwt:
+    issuer: angular
+    password: 123456789
+    exclude-matchers:
+    - method: POST
+      paths:
+      - /oauth/token
+    matchers-with-role:
+    - method: GET
+      paths:
+      - \/usuario.*
+      roles:
+        - ROLE_ADMIN
+    - method: POST
+      paths:
+      - \/usuario.*
+      roles:
+        - ROLE_ADMIN
